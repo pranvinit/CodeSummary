@@ -33,6 +33,7 @@ const getSummary = async (req, res) => {
       await uploadFile.mv(targetPath);
 
       if (uploadFile.name.endsWith(".zip")) {
+        console.log("Zip file");
         const zip = new AdmZip(targetPath);
         zip.extractAllTo(
           path.join(UPLOAD_DIR, path.basename(uploadFile.name, ".zip")),
@@ -44,7 +45,8 @@ const getSummary = async (req, res) => {
           path.basename(uploadFile.name, ".zip")
         );
         filesPaths.push(extractedPath);
-        await processDir(extractedPath);
+        console.log(extractedPath);
+        contentData += await processDir(extractedPath);
       } else {
         contentData += `File: ${uploadFile.name}\n`;
         contentData += `Content:\n${uploadFile.data.toString("utf-8")}\n\n`;
@@ -85,7 +87,6 @@ Remember that this summary will be passed through a formatting function before b
     });
   } catch (error) {
     console.error("An error occurred:", error);
-
     await cleanup(filesPaths).catch((err) => {
       console.error("Failed to clean up files:", err);
     });

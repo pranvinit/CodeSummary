@@ -5,6 +5,7 @@ const UPLOAD_DIR = path.resolve(__dirname, "..", "uploads");
 const SUMMARIES_DIR = path.resolve(__dirname, "..", "summaries");
 
 async function processDir(dir, relativePath = "") {
+  let dirContent = "";
   const files = await fs.readdir(dir);
   for (const file of files) {
     const absolutePath = path.join(dir, file);
@@ -14,14 +15,16 @@ async function processDir(dir, relativePath = "") {
     } else {
       try {
         const content = await fs.readFile(absolutePath, "utf-8");
-        contentData += `File: ${path.join(relativePath, file)}\n`;
-        contentData += `Content:\n${content}\n\n`;
+        dirContent += `File: ${path.join(relativePath, file)}\n`;
+        dirContent += `Content:\n${content}\n\n`;
       } catch (error) {
-        contentData += `File: ${path.join(relativePath, file)}\n`;
-        contentData += `Content: Binary or unreadable content\n\n`;
+        dirContent += `File: ${path.join(relativePath, file)}\n`;
+        dirContent += `Content: Binary or unreadable content\n\n`;
       }
     }
   }
+
+  return dirContent;
 }
 
 const cleanup = async (filesPaths) => {

@@ -5,11 +5,7 @@ const router = express.Router();
 
 const bucketListController = new BucketListController();
 
-router.post("/", (req, res) => {
-  bucketListController.add(req, res);
-});
-router.get("/", (req, res) => {
-  bucketListController.get(req, res);
-});
+router.post("/", bucketListController.add);
+router.get("/", bucketListController.get);
 
 export default router;
